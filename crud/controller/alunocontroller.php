@@ -1,0 +1,34 @@
+<?php
+// Inicia o bloco de codigo PHP.
+
+// Define que todas as respostas deste arquivo serao enviadas em formato JSON.
+header("Content-Type: application/json; charset=utf-8");
+
+// Permite que este arquivo seja chamado por JavaScript a partir do mesmo projeto.
+header("Access-Control-Allow-Origin: *");
+
+// Importa o arquivo responsavel por criar a conexao com o banco de dados.
+require_once __DIR__ . "/../function/conexao.php";
+
+// Importa o arquivo da model Aluno, responsavel por consultar o banco.
+require_once __DIR__ . "/../model/aluno.php";
+
+// Pega a acao enviada pela URL, por exemplo: ?acao=listar.
+$acao = $_GET["acao"] ?? "";
+
+// Cria um objeto da model Aluno, enviando a conexao com o banco.
+$aluno = new Aluno($con);
+
+// Verifica se a acao solicitada foi listar.
+if ($acao === "listar") {
+
+    // Chama o metodo listar da model e guarda os alunos retornados.
+    $alunos = $aluno->listar();
+
+    // Envia os alunos em JSON dentro da chave data, formato usado pelo DataTables.
+    echo json_encode(["data" => $alunos]);
+
+    // Encerra a execucao para nao continuar lendo o restante do arquivo.
+    exit;
+}
+?>
